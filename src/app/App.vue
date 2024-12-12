@@ -4,6 +4,7 @@ import { screenObjectStringifier } from '../catcode/screenObjectStringifier';
 import { execute as screenCodeExecute } from '../catcode/screens/execute';
 import { execute as programCodeExecute } from '../catcode/execute';
 import { VueMonacoEditor } from '@guolao/vue-monaco-editor';
+import { useManageReadme } from './useManageReadme';
 
 const screenText = ref('');
 const programText = ref('');
@@ -47,6 +48,12 @@ const process = () => {
 
     screenText.value = screenObjectStringifier(screenData.value);
 };
+
+const {
+    markdownCode,
+    markdownModalOpen,
+} = useManageReadme();
+
 </script>
 
 <template>
@@ -85,7 +92,12 @@ const process = () => {
             </div>
         </div>
 
+        <b-modal v-model="markdownModalOpen" size="lg" title="Catcode documentation" ok-only>
+            <div v-html="markdownCode"></div>
+        </b-modal>
+
         <div class="run-controls">
+            <b-button variant="secondary" class="fw-bold" @click="markdownModalOpen = true">View documentation</b-button>
             <b-button variant="primary" class="fw-bold" @click="process">RUN THE CODE!</b-button>
         </div>
     </div>
