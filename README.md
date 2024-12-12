@@ -1,6 +1,7 @@
 # Catcode
 
 *Docs and syntax contributed by cat.*
+<br>
 *Interpreter built by izzicoras.*
 
 | Syntax | Explanation | Example |
