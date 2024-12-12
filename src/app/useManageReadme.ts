@@ -6,7 +6,7 @@ export function useManageReadme() {
     const markdownModalOpen = ref(false);
 
     const loadReadMe = async () => {
-        const response = await fetch(window.location.toString() + '/README.md');
+        const response = await fetch(`${window.location.toString()}/README.md?v=${new Date().getTime()}`);
         const text = await response.text();
         const code = await marked.parse(text);
         const container = document.createElement('div');
