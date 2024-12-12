@@ -64,11 +64,16 @@ watch(programText, (value) => {
 });
 
 const process = () => {
-    let data = runScreenCode.value();
-    data = runProgramCode.value(data);
+    try {
+        let data = runScreenCode.value();
+        data = runProgramCode.value(data);
 
-    if (Object.keys(data).length) {
-        screenText.value = screenObjectStringifier(data);
+        if (Object.keys(data).length) {
+            screenText.value = screenObjectStringifier(data);
+        }
+    }
+    catch (e) {
+        programError.value = `Interpreter error: ${e.message}`;
     }
 };
 
