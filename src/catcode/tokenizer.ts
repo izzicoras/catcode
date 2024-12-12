@@ -20,14 +20,6 @@ class Tokenizer
 
     public tokenize()
     {
-        const tokenize = (partialToken: { value: string; type: string; }) => {
-            this.tokens.push({
-                ...partialToken,
-                line: this.line,
-                column: this.column,
-            });
-        };
-
         while (this.index < this.input.length) {
             if (this.match(/^[a-zA-Z]/)) {
                 let value = this.current();
@@ -39,32 +31,32 @@ class Tokenizer
                     this.next();
                 }
 
-                tokenize({ type: 'IDENTIFIER', value });
+                this.push('IDENTIFIER', value);
             } else if (this.match(/^(\n|\s)/)) {
                 this.next();
             } else if (this.match('(')) {
-                tokenize({ type: 'PARENTHESIS_OPEN', value: this.current() });
+                this.push('PARENTHESIS_OPEN', this.current());
                 this.next();
             } else if (this.match(')')) {
-                tokenize({ type: 'PARENTHESIS_CLOSE', value: this.current() });
+                this.push('PARENTHESIS_CLOSE', this.current());
                 this.next();
             } else if (this.match('[')) {
-                tokenize({ type: 'SQUARE_BRACKET_OPEN', value: this.current() });
+                this.push('SQUARE_BRACKET_OPEN', this.current());
                 this.next();
             } else if (this.match(']')) {
-                tokenize({ type: 'SQUARE_BRACKET_CLOSE', value: this.current() });
+                this.push('SQUARE_BRACKET_CLOSE', this.current());
                 this.next();
             } else if (this.match('.')) {
-                tokenize({ type: 'ACCESSOR', value: this.current() });
+                this.push('ACCESSOR', this.current());
                 this.next();
             } else if (this.match(',')) {
-                tokenize({ type: 'COMMA', value: this.current() });
+                this.push('COMMA', this.current());
                 this.next();
             } else if (this.match(/^(>=|<=)/)) {
-                tokenize({ type: 'OPERATOR', value: this.current() + this.next() });
+                this.push('OPERATOR', this.current() + this.next());
                 this.next();
             } else if (this.match(/^(\*|\+|-|\/|>|<)/)) {
-                tokenize({ type: 'OPERATOR', value: this.current() });
+                this.push('OPERATOR', this.current());
                 this.next();
             }  else if (this.match(/^\d/)) {
                 let value = '';
@@ -91,22 +83,29 @@ class Tokenizer
                 }
 
                 if (malformed) {
-                    tokenize({ type: 'MALFORMED_NUMBER', value });
+                    this.push('MALFORMED_NUMBER', value);
                 } else {
-                    tokenize({ type: 'NUMBER', value });
+                    this.push('NUMBER', value);
                 }
             } else if (this.match(';')) {
-                tokenize({ type: 'STATEMENT_END', value: this.current() });
+                this.push('STATEMENT_END', this.current());
                 this.next();
             } else {
-                tokenize({ type: 'UNEXPECTED', value: this.current() });
+                this.push('UNEXPECTED', this.current());
                 this.next();
             }
         }
 
-        console.log(this.tokens);
-
         return this.tokens;
+    }
+
+    private push(type: string, value: string) {
+        this.tokens.push({
+            type,
+            value,
+            line: this.line,
+            column: this.column,
+        });
     }
 
     private match(test: RegExp | string) {
