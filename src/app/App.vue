@@ -6,8 +6,25 @@ import { execute as programCodeExecute } from '../catcode/execute';
 import { VueMonacoEditor } from '@guolao/vue-monaco-editor';
 import { useManageReadme } from './useManageReadme';
 
-const screenText = ref('');
-const programText = ref('');
+const screenText = ref(`[screen]
+0 0 0;
+[/screen]
+`);
+const programText = ref(`first [screen.[0,0]];
+second [screen.[1,0]];
+third [screen.[2,0]];
+
+first + 1;
+
+second + (first > 9);
+third + (second > 9);
+first (first <= 9) * first;
+second (second <= 9) * second;
+third (third <= 9) * third;
+
+[screen.[0,0]] first;
+[screen.[1,0]] second;
+[screen.[2,0]] third;`);
 const screenData = ref<{ [key: string]: number[][] }>({});
 
 const programError = ref('');
@@ -27,6 +44,8 @@ watch(screenText, (value) => {
 
         runScreenCode.value = () => ({});
     }
+}, {
+    immediate: true,
 });
 
 watch(programText, (value) => {
@@ -40,13 +59,17 @@ watch(programText, (value) => {
 
         runProgramCode.value = () => ({});
     }
+}, {
+    immediate: true,
 });
 
 const process = () => {
-    screenData.value = runScreenCode.value();
-    screenData.value = runProgramCode.value(screenData.value);
+    let data = runScreenCode.value();
+    data = runProgramCode.value(data);
 
-    screenText.value = screenObjectStringifier(screenData.value);
+    if (Object.keys(data).length) {
+        screenText.value = screenObjectStringifier(data);
+    }
 };
 
 const {
