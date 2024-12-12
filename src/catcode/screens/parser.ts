@@ -32,13 +32,18 @@ class Parser {
     }
 
     parse(): BlockNode {
-        const body: ScreenNode[] = [];
+        try {
+            const body: ScreenNode[] = [];
 
-        while (!this.isAtEnd()) {
-            body.push(this.screen());
+            while (!this.isAtEnd()) {
+                body.push(this.screen());
+            }
+
+            return { type: 'BLOCK', body };
         }
-
-        return { type: 'BLOCK', body };
+        catch (e) {
+            throw new Error(`Parse error at line ${this.peek().line + 1} and column ${this.peek().column + 1}: ${e.message}`);
+        }
     }
 
     private screen(): ScreenNode {
@@ -77,6 +82,10 @@ class Parser {
     }
 
     private number(): NumberNode {
+        if (this.peek().type === 'SQUARE_BRACKET_OPEN') {
+            throw new Error('Expected a line end.');
+        }
+
         const token = this.consume('NUMBER', 'Expected a number.');
 
         return { type: 'NUMBER', value: Number(token.value) };
@@ -108,7 +117,8 @@ class Parser {
 
     consume(type: string | string[], errorMessage: string): Token {
         if (this.match(type)) return this.previous();
-        throw new Error(errorMessage + this.previous().type);
+        this.index -= 1;
+        throw new Error(errorMessage);
     }
 
     peek(): Token {

@@ -52,13 +52,18 @@ class Parser {
     }
 
     parse(): BlockNode {
-        const body: StatementNode[] = [];
+        try {
+            const body: StatementNode[] = [];
 
-        while (!this.isAtEnd()) {
-            body.push(this.statement());
+            while (!this.isAtEnd()) {
+                body.push(this.statement());
+            }
+
+            return { type: 'BLOCK', body };
         }
-
-        return { type: 'BLOCK', body };
+        catch (e) {
+            throw new Error(`Parse error at line ${this.peek().line + 1} and column ${this.peek().column + 1}: ${e.message}`);
+        }
     }
 
     statement(): StatementNode {
@@ -75,8 +80,9 @@ class Parser {
             return { type: 'STATEMENT', value: node };
         }
         catch (e) {
+            console.error(e);
+
             back();
-            console.log(e, this.index);
         }
 
         if (this.match('IDENTIFIER')) {
@@ -89,7 +95,12 @@ class Parser {
             return { type: 'STATEMENT', value: node };
         }
 
-        throw new Error('Unexpected token: ' + JSON.stringify(this.peek()));
+        if ( ! this.peek()) {
+            this.index -= 1;
+            throw new Error('Unexpected code end');
+        }
+
+        throw new Error('Unexpected token: ' + this.peek().value);
     }
 
     assignment(variable: IdentifierNode | ScreenNode): BinaryExpressionAssignmentNode {
@@ -128,7 +139,7 @@ class Parser {
         }
 
         if (this.peek()?.type === 'SQUARE_BRACKET_OPEN') {
-            this.screen();
+            return this.screen();
         }
 
         if (this.match('PARENTHESIS_OPEN')) {
@@ -137,7 +148,12 @@ class Parser {
             return expr;
         }
 
-        throw new Error('Unexpected token: ' + JSON.stringify(this.peek()));
+        if ( ! this.peek()) {
+            this.index -= 1;
+            throw new Error('Unexpected code end');
+        }
+
+        throw new Error('Unexpected token: ' + this.peek().value);
     }
 
     screen(): ScreenNode {
@@ -172,10 +188,8 @@ class Parser {
 
     waypoint() {
         const previous = this.index;
-        console.log(previous)
 
         return () => {
-            console.log(previous)
             this.index = previous;
         };
     }
@@ -198,6 +212,7 @@ class Parser {
 
     consume(type: string | string[], errorMessage: string): Token {
         if (this.match(type)) return this.previous();
+        this.index -= 1;
         throw new Error(errorMessage);
     }
 

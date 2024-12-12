@@ -35,7 +35,7 @@ class Interpreter
     }
 }
 
-export function interpreter(ast: BlockNode) {
+export function interpreter(ast: BlockNode): Record<string, number[][]> {
     const interpreter = new Interpreter(ast);
 
     return interpreter.interpret();
