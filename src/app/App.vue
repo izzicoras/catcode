@@ -3,6 +3,7 @@ import { ref, watch } from 'vue';
 import { screenObjectStringifier } from '../catcode/screenObjectStringifier';
 import { execute as screenCodeExecute } from '../catcode/screens/execute';
 import { execute as programCodeExecute } from '../catcode/execute';
+import { VueMonacoEditor } from '@guolao/vue-monaco-editor';
 
 const screenText = ref('');
 const programText = ref('');
@@ -49,18 +50,43 @@ const process = () => {
 </script>
 
 <template>
-  <div style="margin-bottom: 1rem;">
-    <label for="program">Program</label>
-    <br>
-    <textarea id="program" v-model="programText" col="20" style="border: 1px #000 solid; width: 320px;"></textarea>
-    <br>
-    {{ programError }}
-  </div>
-  <div style="margin-bottom: 1rem;">
-    <label for="screen">Screens</label>
-    <br>
-    <textarea id="screen" v-model="screenText" col="20" style="border: 1px #000 solid; width: 320px;"></textarea>
-    {{ screenError }}
-  </div>
-  <button @click="process">Process</button>
+    <div class="container vh-100 d-flex flex-column py-4">
+        <div class="row">
+            <div class="col-12">
+                <p class="h1">🐈‍⬛ <span class="fst-italic">CATCODE INTERPRETER</span></p>
+            </div>
+        </div>
+        <div class="row flex-grow-1">
+            <div class="col-md-6 mb-3 d-flex flex-column">
+                <p class="h3 text-primary">Your program</p>
+                <p class="text-danger fw-bold">{{ programError }}</p>
+                <div class="position-relative flex-grow-1">
+                    <div class="position-absolute top-0 left-0 w-100 h-100">
+                        <vue-monaco-editor
+                            v-model:value="programText"
+                            theme="vs-dark"
+                            :options="{ automaticLayout: true, }"
+                        />
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 mb-3 d-flex flex-column">
+                <p class="h3 text-primary">Your screens</p>
+                <p class="text-danger fw-bold">{{ screenError }}</p>
+                <div class="position-relative flex-grow-1">
+                    <div class="position-absolute top-0 left-0 w-100 h-100">
+                        <vue-monaco-editor
+                            v-model:value="screenText"
+                            theme="vs-dark"
+                            :options="{ automaticLayout: true, }"
+                        />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="run-controls">
+            <b-button variant="primary" class="fw-bold" @click="process">RUN THE CODE!</b-button>
+        </div>
+    </div>
 </template>

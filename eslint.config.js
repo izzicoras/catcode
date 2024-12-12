@@ -19,6 +19,7 @@ module.exports = [
     languageOptions: {
       parserOptions: {
         parser: require('@typescript-eslint/parser'),
+        indent: ["error", 4],
       },
     },
   },
