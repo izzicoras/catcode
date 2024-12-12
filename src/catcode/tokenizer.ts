@@ -71,13 +71,14 @@ class Tokenizer
                 let pastDecimal = false;
                 let malformed = false;
 
-                while (this.match(/^\d|\./)) {
+                while (this.match(/^(\d|\.)/)) {
                     value += this.current();
 
                     if (this.match('.') && ! pastDecimal) {
                         if (pastDecimal) {
                             pastDecimal = true;
                         } else {
+                            console.log(value)
                             malformed = true;
                             break;
                         }
