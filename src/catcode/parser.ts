@@ -67,9 +67,7 @@ class Parser {
     }
 
     statement(): StatementNode {
-        const back = this.waypoint();
-
-        try {
+        if (this.peek()?.type === 'SQUARE_BRACKET_OPEN') {
             const screen = this.screen();
             const node = this.assignment(screen);
 
@@ -78,11 +76,6 @@ class Parser {
             }
 
             return { type: 'STATEMENT', value: node };
-        }
-        catch (e) {
-            console.error(e);
-
-            back();
         }
 
         if (this.match('IDENTIFIER')) {
