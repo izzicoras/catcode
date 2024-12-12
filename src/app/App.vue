@@ -59,7 +59,6 @@ const process = () => {
         <div class="row flex-grow-1">
             <div class="col-md-6 mb-3 d-flex flex-column">
                 <p class="h3 text-primary">Your program</p>
-                <p class="text-danger fw-bold">{{ programError }}</p>
                 <div class="position-relative flex-grow-1">
                     <div class="position-absolute top-0 left-0 w-100 h-100">
                         <vue-monaco-editor
@@ -69,10 +68,10 @@ const process = () => {
                         />
                     </div>
                 </div>
+                <p v-if="programError" class="text-danger fw-bold">{{ programError }}</p>
             </div>
             <div class="col-md-6 mb-3 d-flex flex-column">
                 <p class="h3 text-primary">Your screens</p>
-                <p class="text-danger fw-bold">{{ screenError }}</p>
                 <div class="position-relative flex-grow-1">
                     <div class="position-absolute top-0 left-0 w-100 h-100">
                         <vue-monaco-editor
@@ -82,6 +81,7 @@ const process = () => {
                         />
                     </div>
                 </div>
+                <p v-if="screenError" class="text-danger fw-bold">{{ screenError }}</p>
             </div>
         </div>
 
