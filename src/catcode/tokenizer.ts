@@ -74,11 +74,10 @@ class Tokenizer
                 while (this.match(/^(\d|\.)/)) {
                     value += this.current();
 
-                    if (this.match('.') && ! pastDecimal) {
-                        if (pastDecimal) {
+                    if (this.match('.')) {
+                        if ( ! pastDecimal) {
                             pastDecimal = true;
                         } else {
-                            console.log(value)
                             malformed = true;
                             break;
                         }
@@ -104,6 +103,8 @@ class Tokenizer
                 this.next();
             }
         }
+
+        console.log(this.tokens);
 
         return this.tokens;
     }

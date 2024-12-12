@@ -114,7 +114,7 @@ class Interpreter
                     break;
             }
 
-            return screen[xValue][yValue] = Math.min(Math.max(screen[xValue][yValue], 0), 9);
+            return screen[xValue][yValue] = Math.floor(Math.min(Math.max(screen[xValue][yValue], 0), 9));
         }
 
         return value;
