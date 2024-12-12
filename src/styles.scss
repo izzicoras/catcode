@@ -3,6 +3,7 @@ $headings-font-weight: bold;
 
 .run-controls {
     position: absolute;
+    z-index: 900;
     right: 1rem;
     bottom: 1rem;
 }
