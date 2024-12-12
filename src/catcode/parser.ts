@@ -156,11 +156,11 @@ class Parser {
         this.consume('ACCESSOR', 'Expected ".".');
         this.consume('SQUARE_BRACKET_OPEN', 'Expected "[" for screen coordinate.');
 
-        const x = this.expression();
+        const y = this.expression();
 
         this.consume('COMMA', 'Expected "[" for screen coordinate.');
 
-        const y = this.expression();
+        const x = this.expression();
 
         this.consume('SQUARE_BRACKET_CLOSE', 'Expected "]" after expression.');
         this.consume('SQUARE_BRACKET_CLOSE', 'Expected "]" after expression.');
